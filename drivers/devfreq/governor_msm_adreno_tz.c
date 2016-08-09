@@ -434,9 +434,9 @@ static int tz_get_target_freq(struct devfreq *devfreq, unsigned long *freq)
 #if 1
 	// scale busy time up based on adrenoboost parameter, only if MIN_BUSY exceeded...
 //	if ((unsigned int)(priv->bin.busy_time + stats.busy_time) >= MIN_BUSY && adrenoboost) {
-	if (loc_adrenoboost) {
-		if (loc_adrenoboost == 1) {
-			priv->bin.busy_time += (unsigned int)((stats.busy_time * ( 1 + loc_adrenoboost ) * lvl_multiplicator_map_1[ last_level ]) / lvl_divider_map_1[ last_level ]);
+	if (adrenoboost) {
+		if (adrenoboost == 1) {
+			priv->bin.busy_time += (unsigned int)((stats.busy_time * ( 1 + adrenoboost ) * lvl_multiplicator_map_1[ last_level ]) / lvl_divider_map_1[ last_level ]);
 		} else
 		if (loc_adrenoboost == 2) {
 			priv->bin.busy_time += (unsigned int)((stats.busy_time * ( 1 + loc_adrenoboost ) * lvl_multiplicator_map_2[ last_level ]  * 7 ) / (lvl_divider_map_2[ last_level ] * 10));
@@ -472,6 +472,11 @@ static int tz_get_target_freq(struct devfreq *devfreq, unsigned long *freq)
 		pr_err(TAG "bad freq %ld\n", stats.current_frequency);
 		return level;
 	}
+	// idle freq or any non governor drop should move last_level as well, so adrenoboost works on proper leveling
+	if (level != priv->bin.last_level) {
+		priv->bin.last_level = level;
+	}
+
 	// idle freq or any non governor drop should move last_level as well, so adrenoboost works on proper leveling
 	if (level != priv->bin.last_level) {
 		priv->bin.last_level = level;
@@ -595,8 +600,7 @@ static int tz_start(struct devfreq *devfreq)
 #if 1
 	priv->bin.last_level = devfreq->profile->max_state - 1;
 #endif
-
-	return 0;
+	return kgsl_devfreq_add_notifier(devfreq->dev.parent, &priv->nb);
 }
 
 static int tz_stop(struct devfreq *devfreq)
