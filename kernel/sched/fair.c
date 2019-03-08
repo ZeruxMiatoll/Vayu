@@ -89,7 +89,6 @@ walt_dec_cfs_rq_stats(struct cfs_rq *cfs_rq, struct task_struct *p) {}
  *
  * (default: 5ms * (1 + ilog(ncpus)), units: nanoseconds)
  */
-<<<<<<< HEAD
 #ifdef CONFIG_ZEN_INTERACTIVE
 unsigned int sysctl_sched_latency			= 3000000ULL;
 static unsigned int normalized_sysctl_sched_latency	= 3000000ULL;
