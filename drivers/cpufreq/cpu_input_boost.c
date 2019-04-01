@@ -183,6 +183,7 @@ static int cpu_notifier_cb(struct notifier_block *nb, unsigned long action,
 {
 	struct boost_drv *b = container_of(nb, typeof(*b), cpu_notif);
 	struct cpufreq_policy *policy = data;
+	u32 state;
 
 	if (action != CPUFREQ_ADJUST)
 		return NOTIFY_OK;
@@ -209,6 +210,10 @@ static int cpu_notifier_cb(struct notifier_block *nb, unsigned long action,
 		policy->min = CONFIG_MIN_FREQ_LP;
 	else
 		policy->min = CONFIG_MIN_FREQ_PERF;
+	if (state & INPUT_BOOST)
+		policy->min = get_input_boost_freq(policy);
+	else
+		policy->min = policy->cpuinfo.max_freq;
 
 	return NOTIFY_OK;
 }

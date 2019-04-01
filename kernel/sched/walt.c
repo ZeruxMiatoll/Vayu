@@ -118,12 +118,12 @@ static void release_rq_locks_irqrestore(const cpumask_t *cpus,
  */
 #define MIN_SCHED_RAVG_WINDOW (3333333 * 6)
 #else
-/* Min window size (in ns) = 20ms */
-#define MIN_SCHED_RAVG_WINDOW 20000000
+/* Min window size (in ns) = 10ms */
+#define MIN_SCHED_RAVG_WINDOW 3000000
 #endif
 
 /* Max window size (in ns) = 1s */
-#define MAX_SCHED_RAVG_WINDOW 1000000000
+#define MAX_SCHED_RAVG_WINDOW 3000000
 
 /* 1 -> use PELT based load stats, 0 -> use window-based load stats */
 unsigned int __read_mostly walt_disabled = 0;
@@ -937,7 +937,7 @@ unsigned int max_possible_efficiency = 1;
 unsigned int min_possible_efficiency = UINT_MAX;
 
 unsigned int sysctl_sched_conservative_pl;
-unsigned int sysctl_sched_many_wakeup_threshold = 1000;
+unsigned int sysctl_sched_many_wakeup_threshold = 300;
 
 #define INC_STEP 8
 #define DEC_STEP 2
