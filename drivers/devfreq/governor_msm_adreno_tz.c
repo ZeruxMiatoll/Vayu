@@ -67,7 +67,6 @@ static DEFINE_SPINLOCK(suspend_lock);
 static unsigned int adrenoboost = 1;
 #endif
 
-
 static u64 suspend_time;
 static u64 suspend_start;
 static unsigned long acc_total, acc_relative_busy;
