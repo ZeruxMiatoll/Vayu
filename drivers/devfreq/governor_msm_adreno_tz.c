@@ -104,8 +104,12 @@ static ssize_t adrenoboost_save(struct device *dev,
 {
 	int input;
 	sscanf(buf, "%d ", &input);
-	if (input < 0 || input > 4) {
-		adrenoboost = 0;
+	if (input < 0 || input > 3) {
+		if (input < 0){
+			adrenoboost = 0;
+		} else {
+			adrenoboost = 3;
+		}
 	} else {
 		adrenoboost = input;
 	}
@@ -443,12 +447,9 @@ static int tz_get_target_freq(struct devfreq *devfreq, unsigned long *freq)
 			priv->bin.busy_time += (unsigned int)((stats.busy_time * ( 1 + adrenoboost ) * lvl_multiplicator_map_1[ last_level ]) / lvl_divider_map_1[ last_level ]);
 		} else
 		if (adrenoboost == 2) {
-			priv->bin.busy_time += (unsigned int)((stats.busy_time * ( 1 + adrenoboost ) * lvl_multiplicator_map_2[ last_level ]  * 7 ) / (lvl_divider_map_2[ last_level ] * 10));
-		} else 
-		if (adrenoboost == 3) {
-			priv->bin.busy_time += (unsigned int)((stats.busy_time * ( 1 + adrenoboost ) * lvl_multiplicator_map_3[ last_level ]  * 8 ) / (lvl_divider_map_3[ last_level ] * 10));
+			priv->bin.busy_time += (unsigned int)((stats.busy_time * ( 1 + 3 ) * lvl_multiplicator_map_2[ last_level ]  * 8 ) / (lvl_divider_map_2[ last_level ] * 10));
 		} else {
-			priv->bin.busy_time += (unsigned int)((stats.busy_time * ( 1 + adrenoboost ) * lvl_multiplicator_map_4[ last_level ]  * 9 ) / (lvl_divider_map_4[ last_level ] * 10));
+			priv->bin.busy_time += (unsigned int)((stats.busy_time * ( 1 + 4 ) * lvl_multiplicator_map_3[ last_level ]  * 9 ) / (lvl_divider_map_3[ last_level ] * 10));
 		}
 	} else {
 		priv->bin.busy_time += stats.busy_time;
